@@ -5,6 +5,7 @@
         class="todo"
         :class="{ select: todo.isSelected }"
         @click.self="$emit('selectTodo', $event, index)"
+        @dblclick="$emit('viewDetail', todo)"
       >
         <input type="checkbox" name="" id="" v-model="todo.done" />
         <h3>{{ todo.title }}</h3>
@@ -45,7 +46,7 @@ export default {
   background: #f7b5b545;
 }
 
-span {
+.list-todo span {
   font-size: 1.7em;
   font-weight: 600;
   position: absolute;

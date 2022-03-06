@@ -17,8 +17,15 @@
         :todos="todos"
         @selectTodo="selectTodo"
         @deleteTodo="deleteTodo"
+        @viewDetail="viewDetail"
       />
     </div>
+    <TodoDetails
+      :isViewDetail="isViewDetail"
+      :todo="todoDetail"
+      @updateTodo="updateTodo"
+      @closeTodoDetail="closeTodoDetail"
+    />
   </div>
 </template>
 
@@ -31,6 +38,7 @@ import ListTodo from "../components/Todo/ListTodo.vue";
 import TodoInput from "../components/Todo/TodoInput.vue";
 import SearchInput from "../components/Todo/SearchInput.vue";
 import Actions from "../components/Todo/Actions.vue";
+import TodoDetails from "../components/Todo/TodoDetails.vue";
 
 export default {
   name: "Todos",
@@ -39,6 +47,7 @@ export default {
     TodoInput,
     SearchInput,
     Actions,
+    TodoDetails,
   },
   setup() {
     const store = useStore();
@@ -46,17 +55,15 @@ export default {
     // Save todo
     const todos = ref(store.state.todoModel.todos);
     const title = ref("");
-    let todoId = ref(0);
 
     const saveTodo = () => {
       store.dispatch("saveTodos", {
-        id: todoId.value,
+        id: todos.value.length,
         title: title.value,
         done: false,
         isSelected: false,
       });
       title.value = "";
-      todoId.value++;
     };
 
     // delete todo by index
@@ -109,17 +116,36 @@ export default {
       }
     }
 
+    // Coppy todo
     const coppyTodo = () => {
       const listTodoSelected = todos.value.filter((todo) => todo.isSelected);
       listTodoSelected.forEach((todo) => {
         store.dispatch("saveTodos", {
-          id: todoId.value,
+          id: todos.value.length,
           title: todo.title,
           done: false,
           isSelected: false,
         });
       });
     };
+
+    // View detail
+    const isViewDetail = ref(false);
+    const todoDetail = ref({});
+    const viewDetail = (todo) => {
+      isViewDetail.value = true;
+      todoDetail.value = todos.value.find((item) => item.id == todo.id);
+    };
+
+    const closeTodoDetail = () => {
+      isViewDetail.value = false;
+    }
+
+    const updateTodo = (newTodo) => {
+      console.log(newTodo);
+      console.log(todos.value);
+      isViewDetail.value = false;
+    }
 
     return {
       todos,
@@ -128,12 +154,18 @@ export default {
       todoDone,
       listSearchTodo,
       searchStatus,
+      isViewDetail,
+      todoDetail,
+      // function
       saveTodo,
       deleteTodo,
       handleSearch,
       selectTodo,
       deleteMultipleTodo,
       coppyTodo,
+      viewDetail,
+      updateTodo,
+      closeTodoDetail,
     };
   },
 };
