@@ -21,6 +21,7 @@ export default {
 <style>
 .todo-input {
   margin: 0.5em;
+  width: 100%;
 }
 
 .todo-input input {

@@ -1,4 +1,4 @@
-import { SAVE_TODO, DELETE_TODO } from "../mutations"
+import { SAVE_TODO, DELETE_TODO, DELETE_MULTIPLE_TODO } from "../mutations"
 import { saveTodos, deleteTodo, deleteMultipleTodo } from "../actions"
 
 const todoModel = {
@@ -8,11 +8,12 @@ const todoModel = {
     mutations: {
         SAVE_TODO,
         DELETE_TODO,
+        DELETE_MULTIPLE_TODO,
     },
     actions: {
         saveTodos,
         deleteTodo,
-        deleteMultipleTodo
+        deleteMultipleTodo,
     },
     getters: {
         listTodoDone(state) {

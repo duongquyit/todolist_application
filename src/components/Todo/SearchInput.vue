@@ -18,6 +18,7 @@ export default {
 </script>
 
 <style>
+
 .search input {
   padding: 0.5em;
   font-size: 1em;

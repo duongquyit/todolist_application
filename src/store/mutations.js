@@ -3,7 +3,12 @@ const SAVE_TODO = (state, todo) => {
 }
 
 const DELETE_TODO = (state, payload) => {
-    state.todos.splice(payload, 1)
+    state.todos.splice(payload, 1);
+    console.log(state.todos);
 }
 
-export { SAVE_TODO, DELETE_TODO };
+const DELETE_MULTIPLE_TODO = (state, payload) => {
+    state.todos = payload.filter(todo => todo.isSelected == false);
+}
+
+export { SAVE_TODO, DELETE_TODO, DELETE_MULTIPLE_TODO };

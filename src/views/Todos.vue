@@ -4,7 +4,10 @@
     <div class="todos">
       <TodoInput v-model="title" @saveTodo="saveTodo" />
       <SearchInput v-model="searchTitle" @search="handleSearch" />
-      <Actions @deleteMultipleTodo="deleteMultipleTodo" />
+      <Actions
+        @deleteMultipleTodo="deleteMultipleTodo"
+        @coppyTodo="coppyTodo"
+      />
     </div>
     <div class="list-todo" v-if="searchStatus">
       <ListTodo :todos="listSearchTodo" @deleteTodo="deleteTodo" />
@@ -54,18 +57,16 @@ export default {
       });
       title.value = "";
       todoId.value++;
-      console.log(todos.value);
     };
 
     // delete todo by index
     const deleteTodo = (event, index) => {
-      console.log(index);
-
       return store.dispatch("deleteTodo", index);
     };
 
     const deleteMultipleTodo = () => {
-      return store.dispatch("deleteMultipleTodo", listIndex.value);
+      store.dispatch("deleteMultipleTodo", todos.value);
+      todos.value = store.state.todoModel.todos;
     };
 
     // Todo done
@@ -73,7 +74,7 @@ export default {
       return store.getters.listTodoDone;
     });
 
-    // Search
+    // Search todo
     const searchTitle = ref("");
     const listSearchTodo = ref([]);
     const searchStatus = ref(false);
@@ -90,25 +91,14 @@ export default {
     };
 
     // Select todo
-    const listIndex = ref([]);
-
-    function selectTodo (e, index) {
+    function selectTodo(e, index) {
       if (e.ctrlKey) {
-        if (
-          !listIndex.value.includes(index) &&
-          todos.value[index].isSelected == false
-        ) {
-          listIndex.value.push(index);
-          todos.value[index].isSelected = !todos.value[index].isSelected;
+        if (!todos.value[index].isSelected) {
+          todos.value[index].isSelected = true;
         } else {
-          console.log(index);
-          listIndex.value.splice(index, 1);
-          todos.value[index].isSelected = !todos.value[index].isSelected;
+          todos.value[index].isSelected = false;
         }
-        console.log(listIndex.value);
-      } 
-      else {
-        listIndex.value = [];
+      } else {
         for (let i = 0; i < todos.value.length; i++) {
           if (i === index) {
             todos.value[index].isSelected = !todos.value[index].isSelected;
@@ -117,6 +107,18 @@ export default {
           todos.value[i].isSelected = false;
         }
       }
+    }
+
+    const coppyTodo = () => {
+      const listTodoSelected = todos.value.filter((todo) => todo.isSelected);
+      listTodoSelected.forEach((todo) => {
+        store.dispatch("saveTodos", {
+          id: todoId.value,
+          title: todo.title,
+          done: false,
+          isSelected: false,
+        });
+      });
     };
 
     return {
@@ -131,10 +133,16 @@ export default {
       handleSearch,
       selectTodo,
       deleteMultipleTodo,
+      coppyTodo,
     };
   },
 };
 </script>
 
 <style>
+.todos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 </style>

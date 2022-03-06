@@ -6,12 +6,8 @@ const deleteTodo = ({ commit }, payload) => {
     commit('DELETE_TODO', payload);
 }
 
-const deleteMultipleTodo = ({ commit, state }, payload) => {
-    payload.forEach((id) => {
-        // commit('DELETE_TODO', id);
-        console.log(id);
-    })
-    
+const deleteMultipleTodo = ({ commit }, payload) => {
+    commit('DELETE_MULTIPLE_TODO', payload);
 }
 
 export { saveTodos, deleteTodo, deleteMultipleTodo }
